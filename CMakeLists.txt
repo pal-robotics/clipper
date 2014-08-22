@@ -1,21 +1,20 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0)
-PROJECT(polyclipping)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
+PROJECT(clipper)
 
-SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Release type")
-# The header name clipper.hpp is too generic, so install in a subdirectory
-SET(CMAKE_INSTALL_INCDIR "${CMAKE_INSTALL_PREFIX}/include/polyclipping")
-SET(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
-SET(CMAKE_INSTALL_PKGCONFIGDIR "${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
-SET(PCFILE "${CMAKE_CURRENT_BINARY_DIR}/polyclipping.pc")
+find_package(catkin REQUIRED)
 
-SET(BUILD_SHARED_LIBS ON CACHE BOOL
-    "Build shared libraries (.dll/.so) instead of static ones (.lib/.a)")
-ADD_LIBRARY(polyclipping clipper.cpp)
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES clipper
+)
 
-CONFIGURE_FILE (polyclipping.pc.cmakein "${PCFILE}" @ONLY)
+include_directories(include/clipper)
 
-INSTALL (FILES clipper.hpp DESTINATION "${CMAKE_INSTALL_INCDIR}")
-INSTALL (TARGETS polyclipping LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-INSTALL (FILES "${PCFILE}" DESTINATION "${CMAKE_INSTALL_PKGCONFIGDIR}")
+ADD_LIBRARY(clipper clipper.cpp)
 
-SET_TARGET_PROPERTIES(polyclipping PROPERTIES VERSION 16.0.0 SOVERSION 16 )
+SET_TARGET_PROPERTIES(clipper PROPERTIES VERSION 16.0.0 SOVERSION 16)
+
+INSTALL (FILES include/clipper/clipper.hpp
+  DESTINATION "${CATKIN_PACKAGE_INCLUDE_DESTINATION}")
+INSTALL (TARGETS clipper
+  LIBRARY DESTINATION "${CATKIN_PACKAGE_LIB_DESTINATION}")
